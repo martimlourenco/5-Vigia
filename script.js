@@ -216,7 +216,12 @@ function renderCalendar(calendarId) {
         dayElement.className = 'calendar-day';
         dayElement.textContent = currentDate.getDate();
         
-        const dateString = currentDate.toISOString().split('T')[0];
+        // CORRIGIDO: Criar dateString sem problemas de timezone
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const dateString = `${year}-${month}-${day}`;
+        
         const accommodation = calendarId === 'calendar1' ? 'alojamento1' : 'alojamento2';
         
         // Check if date is in current month
@@ -328,9 +333,11 @@ function updateSelectedDatesDisplay() {
         display.textContent = 'Seleccione as datas desejadas no calendário';
         contactBtn.disabled = true;
     } else {
+        // CORRIGIDO: Usar parsing direto sem timezone problems
         const formattedDates = app.selectedDates.map(date => {
-            const d = new Date(date + 'T00:00:00');
-            return d.toLocaleDateString('pt-PT');
+            // date está no formato "2025-08-18" 
+            const [year, month, day] = date.split('-');
+            return `${day}/${month}/${year}`;
         });
         
         if (formattedDates.length === 1) {
@@ -341,7 +348,7 @@ function updateSelectedDatesDisplay() {
         
         contactBtn.disabled = false;
         
-        // Update contact form with selected dates - CORRIGIDO PARA MOSTRAR INTERVALO CORRETO
+        // Update contact form with selected dates - SEM TIMEZONE ISSUES
         const datesInput = document.getElementById('dates');
         if (datesInput) {
             if (formattedDates.length >= 2) {
