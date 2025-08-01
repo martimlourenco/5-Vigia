@@ -20,19 +20,19 @@ const app = {
         templateId: 'template_xleddav',
         publicKey: 'nCOa0AvmVhWz070PC'
     },
-    // URLs dos ficheiros iCal locais - DADOS REAIS DOS DOIS ALOJAMENTOS
+    // URLs dos iCal directos do Booking.com com proxy CORS para GitHub Pages
     icalUrls: {
-        alojamento1: './export.ics',    // 5º Vigia - Ficheiro real do Booking.com
-        alojamento2: './exportcq.ics'   // Cantinho das Quintas - Ficheiro real do Booking.com
+        alojamento1: 'https://api.allorigins.win/raw?url=https://ical.booking.com/v1/export?t=a81c3dff-fbdd-4868-86a4-cd027938b5d0',    // Vigia's Guest House
+        alojamento2: 'https://api.allorigins.win/raw?url=https://ical.booking.com/v1/export?t=ee9a5a09-c9d7-4a49-897b-c224dd49b5b4'     // Cantinho das Quintãs
     },
-    // Dados do Booking - SERÃO CARREGADOS DO iCAL
+    // Dados do Booking - SERÃO CARREGADOS DO iCAL em tempo real
     bookingData: {
         alojamento1: {
-            // Iniciar VAZIO - será preenchido pelo iCal
+            // Iniciar VAZIO - será preenchido pelos dados reais do Booking.com
             occupiedDates: []
         },
         alojamento2: {
-            // Iniciar VAZIO - será preenchido pelo iCal  
+            // Iniciar VAZIO - será preenchido pelos dados reais do Booking.com  
             occupiedDates: []
         }
     }
@@ -54,12 +54,12 @@ async function initializeApp() {
     setupScrollEffects();
     setupViewMoreButtons();
     
-    // PRIMEIRO: Carregar dados reais do iCal
-    console.log('🚀 PRIORIDADE: A carregar dados reais do iCal ANTES de mostrar calendários...');
+    // REACTIVAR: Carregar dados reais do Booking.com
+    console.log('🚀 A carregar dados reais do iCal do Booking.com...');
     await updateBookingData();
     
     // DEPOIS: Inicializar calendários com dados reais
-    console.log('� A renderizar calendários com dados reais...');
+    console.log('📅 A renderizar calendários com dados reais...');
     renderCalendar('calendar1');
     renderCalendar('calendar2');
 }
@@ -912,7 +912,7 @@ function setupScrollEffects() {
     });
 }
 
-// Funções utilitárias e debug
+// Funções utilitárias
 function formatDate(date) {
     const d = new Date(date);
     return d.toLocaleDateString('pt-PT');
@@ -922,68 +922,25 @@ function isDateOccupied(date, accommodation) {
     return app.bookingData[accommodation].occupiedDates.includes(date);
 }
 
-// Função de teste para o sistema de email (remover em produção)
-function testEmailSystem() {
-    console.log('🧪 Testando sistema de email...');
-    const testData = {
-        name: 'Teste Usuario',
-        email: 'teste@email.com',
-        phone: '123456789',
-        accommodation: 'alojamento1',
-        dates: '15/01/2025 - 18/01/2025',
-        message: 'Esta é uma mensagem de teste.'
-    };
-    
-    const emailBody = `Pedido de Reserva - 5º Vigia
-
-DADOS DO CLIENTE:
-Nome: ${testData.name}
-Email: ${testData.email}
-Telefone: ${testData.phone}
-
-DETALHES DA RESERVA:
-Alojamento: ${getAccommodationName(testData.accommodation)}
-Datas Pretendidas: ${testData.dates}
-
-MENSAGEM:
-${testData.message}
-`;
-    
-    console.log('📧 Corpo do email gerado:');
-    console.log(emailBody);
-    console.log('✅ Sistema de email funcional!');
-}
-
-// Executar teste em modo de desenvolvimento
-if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') {
-    // Adicionar botão de teste (apenas em desenvolvimento)
-    setTimeout(() => {
-        if (document.getElementById('contact-form')) {
-            testEmailSystem();
-        }
-    }, 2000);
-}
-
 // Simulação de atualização de dados do Booking via iCal
 async function updateBookingData() {
-    console.log('🔄 MODO REAL: A carregar dados do Booking.com...');
-    
-    // Esta função carrega os dados do iCal do Booking.com
+    console.log('🔄 A carregar dados do Booking.com...');
     try {
         // Para cada alojamento, buscar dados do iCal
         for (const [accommodation, icalUrl] of Object.entries(app.icalUrls)) {
             console.log(`📅 A verificar ${accommodation}:`, icalUrl);
             
-            if (icalUrl && !icalUrl.includes('...')) { // Verificar se URL foi configurado
+            if (icalUrl && !icalUrl.includes('...')) {
                 console.log(`✅ URL válido encontrado para ${accommodation}`);
                 console.log(`🌐 A tentar carregar dados reais do iCal...`);
                 
                 const occupiedDates = await fetchICalData(icalUrl);
                 
                 if (occupiedDates.length > 0) {
-                    // SUBSTITUIR os dados simulados pelos reais
+                    // SUBSTITUIR os dados vazios pelos reais
                     app.bookingData[accommodation].occupiedDates = occupiedDates;
-                    console.log(`✅ ${occupiedDates.length} datas reais carregadas para ${accommodation}:`, occupiedDates);
+                    console.log(`✅ ${occupiedDates.length} datas reais carregadas para ${accommodation}`);
+                    console.log(`🎯 DADOS REAIS DO BOOKING.COM aplicados para ${accommodation}`);
                 } else {
                     console.log(`⚠️ Nenhuma data ocupada encontrada para ${accommodation}`);
                 }
@@ -992,53 +949,128 @@ async function updateBookingData() {
             }
         }
         
-        console.log('✅ Dados do iCal atualizados (MODO REAL)');
+        console.log('✅ Dados do iCal atualizados');
         console.log('📊 Estado final dos dados:', app.bookingData);
+        console.log('🔍 Verificação final - alojamento1:', app.bookingData.alojamento1.occupiedDates.length, 'datas');
+        console.log('🔍 Verificação final - alojamento2:', app.bookingData.alojamento2.occupiedDates.length, 'datas');
         
         // Re-render calendars with new data
         renderCalendar('calendar1');
         renderCalendar('calendar2');
         
+        // Log final de confirmação
+        setTimeout(() => {
+            console.log('🎯 CALENDÁRIOS RENDERIZADOS!');
+            console.log('📅 Calendar1 (Vigia):', app.bookingData.alojamento1.occupiedDates.slice(0, 5), '...');
+            console.log('📅 Calendar2 (Cantinho):', app.bookingData.alojamento2.occupiedDates.slice(0, 5), '...');
+        }, 500);
+        
     } catch (error) {
         console.error('❌ Erro ao atualizar dados do iCal:', error);
-        console.log('🔄 A manter dados simulados como fallback');
+        
+        // Re-render calendars mesmo com erro
+        renderCalendar('calendar1');
+        renderCalendar('calendar2');
     }
 }
 
 // Função para carregar ficheiro iCal LOCAL - MUITO MAIS SIMPLES E CONFIÁVEL
-async function fetchICalData(icalFile) {
-    console.log('📁 A carregar ficheiro iCal local:', icalFile);
+async function fetchICalData(icalUrl) {
+    console.log('🌐 A carregar dados iCal do Booking.com:', icalUrl);
     
-    try {
-        // Carregar ficheiro local - sem problemas de CORS!
-        const response = await fetch(icalFile);
-        
-        if (!response.ok) {
-            throw new Error(`Erro ao carregar ficheiro: ${response.status}`);
-        }
-        
-        const icalText = await response.text();
-        console.log('✅ Ficheiro iCal carregado com sucesso!');
-        console.log('� Conteúdo (primeiros 200 chars):', icalText.substring(0, 200));
-        
-        if (icalText.includes('BEGIN:VCALENDAR')) {
-            const events = parseICalEvents(icalText);
-            console.log('🎯 RESERVAS REAIS CARREGADAS:', events);
-            return events;
-        } else {
-            throw new Error('Ficheiro não é um iCal válido');
-        }
-        
-    } catch (error) {
-        console.error(`❌ Erro ao carregar ${icalFile}:`, error.message);
-        console.log('⚠️ Ficheiro não encontrado ou inacessível - calendário ficará vazio');
-        return [];
+    // Lista de proxies CORS otimizados para GitHub Pages
+    const corsProxies = [
+        'https://api.allorigins.win/raw?url=',  // Mais estável para GitHub Pages
+        'https://corsproxy.io/?',               // Backup
+        'https://cors-anywhere.herokuapp.com/' // Último recurso
+    ];
+    
+    // Extrair URL original do Booking.com
+    let originalUrl;
+    if (icalUrl.includes('cors-anywhere.herokuapp.com/')) {
+        originalUrl = icalUrl.split('cors-anywhere.herokuapp.com/')[1];
+    } else if (icalUrl.includes('raw?url=')) {
+        originalUrl = icalUrl.split('raw?url=')[1];
+    } else if (icalUrl.includes('corsproxy.io/?')) {
+        originalUrl = icalUrl.split('corsproxy.io/?')[1];
+    } else {
+        originalUrl = icalUrl;
     }
+    
+    console.log('🔗 URL original extraído:', originalUrl);
+    console.log('🔍 URL contém booking.com?', originalUrl.includes('booking.com'));
+    console.log('🔍 URL contém token?', originalUrl.includes('?t='));
+    
+    for (let i = 0; i < corsProxies.length; i++) {
+        try {
+            const proxyUrl = corsProxies[i] + originalUrl;
+            console.log(`🔄 Tentativa ${i + 1}/${corsProxies.length}: ${proxyUrl}`);
+            
+            const startTime = Date.now();
+            const response = await fetch(proxyUrl, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            const duration = Date.now() - startTime;
+            
+            console.log(`📡 Resposta recebida em ${duration}ms - Status: ${response.status} ${response.statusText}`);
+            console.log(`📡 Content-Type:`, response.headers.get('content-type'));
+            console.log(`📡 Content-Length:`, response.headers.get('content-length'));
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const icalText = await response.text();
+            console.log('✅ Dados iCal carregados com sucesso!');
+            console.log(`📊 Tamanho da resposta: ${icalText.length} caracteres`);
+            console.log('📊 Conteúdo (primeiros 300 chars):', icalText.substring(0, 300));
+            console.log('📊 Conteúdo (últimos 100 chars):', icalText.substring(icalText.length - 100));
+            
+            if (icalText.includes('BEGIN:VCALENDAR')) {
+                const eventCount = (icalText.match(/BEGIN:VEVENT/g) || []).length;
+                console.log(`📋 Encontrados ${eventCount} eventos no iCal`);
+                
+                const events = parseICalEvents(icalText);
+                console.log('🎯 RESERVAS REAIS CARREGADAS:', events);
+                console.log(`🎯 Total de datas ocupadas processadas: ${events.length}`);
+                
+                if (events.length > 0) {
+                    console.log(`🎯 Primeira data ocupada: ${events[0]}`);
+                    console.log(`🎯 Última data ocupada: ${events[events.length - 1]}`);
+                }
+                
+                return events;
+            } else {
+                console.warn('⚠️ Resposta não contém BEGIN:VCALENDAR');
+                console.log('📄 Conteúdo completo da resposta:', icalText);
+                throw new Error('Resposta não é um iCal válido');
+            }
+            
+        } catch (error) {
+            console.warn(`❌ Proxy ${i + 1} falhou:`, error.message);
+            console.warn('🔍 Detalhes do erro:', error);
+            
+            // Se é o último proxy, retornar array vazio
+            if (i === corsProxies.length - 1) {
+                console.error('🚨 Todos os proxies falharam - calendário ficará vazio');
+                console.error('💡 Sugestão: Verificar se os URLs do Booking.com estão corretos');
+                console.error('💡 URL original testado:', originalUrl);
+                return [];
+            }
+        }
+    }
+    
+    return [];
 }
 
 // Parser melhorado para eventos iCal
 function parseICalEvents(icalText) {
     console.log('🔍 A processar dados iCal...');
+    console.log(`📊 Total de linhas a processar: ${icalText.split('\n').length}`);
+    
     const occupiedDates = [];
     const lines = icalText.split('\n');
     let currentEvent = {};
@@ -1054,7 +1086,9 @@ function parseICalEvents(icalText) {
             if (currentEvent.dtstart && currentEvent.dtend) {
                 const dates = getDatesBetween(currentEvent.dtstart, currentEvent.dtend);
                 occupiedDates.push(...dates);
-                console.log(`📋 Evento ${eventCount}: ${currentEvent.dtstart} até ${currentEvent.dtend} (${dates.length} dias)`);
+                console.log(`📋 Evento ${eventCount}: ${currentEvent.dtstart} até ${currentEvent.dtend} (${dates.length} dias) - ${currentEvent.summary || 'Sem título'}`);
+            } else {
+                console.warn(`⚠️ Evento ${eventCount} incompleto:`, currentEvent);
             }
         } else if (line.startsWith('DTSTART')) {
             // Suportar diferentes formatos de data
@@ -1062,15 +1096,21 @@ function parseICalEvents(icalText) {
             if (dateMatch) {
                 const dateStr = dateMatch[1];
                 currentEvent.dtstart = `${dateStr.substr(0,4)}-${dateStr.substr(4,2)}-${dateStr.substr(6,2)}`;
+                console.log(`📅 Data início: ${currentEvent.dtstart}`);
+            } else {
+                console.warn(`⚠️ Formato DTSTART não reconhecido: ${line}`);
             }
         } else if (line.startsWith('DTEND')) {
             const dateMatch = line.match(/(\d{8})/);
             if (dateMatch) {
                 const dateStr = dateMatch[1];
                 currentEvent.dtend = `${dateStr.substr(0,4)}-${dateStr.substr(4,2)}-${dateStr.substr(6,2)}`;
+                console.log(`📅 Data fim: ${currentEvent.dtend}`);
+            } else {
+                console.warn(`⚠️ Formato DTEND não reconhecido: ${line}`);
             }
         } else if (line.startsWith('SUMMARY')) {
-            // Guardar resumo para debug
+            // Guardar resumo
             currentEvent.summary = line.split(':')[1] || '';
         }
     }
@@ -1079,7 +1119,12 @@ function parseICalEvents(icalText) {
     const uniqueDates = [...new Set(occupiedDates)].sort();
     console.log(`✅ Total de eventos processados: ${eventCount}`);
     console.log(`📅 Total de dias ocupados: ${uniqueDates.length}`);
-    console.log('📊 Datas ocupadas:', uniqueDates);
+    console.log('📊 Datas ocupadas (amostra):', uniqueDates.slice(0, 10));
+    
+    if (uniqueDates.length === 0) {
+        console.warn('⚠️ NENHUMA DATA OCUPADA ENCONTRADA!');
+        console.log('🔍 Primeira parte do iCal:', icalText.substring(0, 500));
+    }
     
     return uniqueDates;
 }
