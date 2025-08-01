@@ -226,6 +226,9 @@ function renderCalendar(calendarId) {
         const day = String(currentDate.getDate()).padStart(2, '0');
         const dateString = `${year}-${month}-${day}`;
         
+        // Adicionar atributo data-date para a função fillIntermediateDates
+        dayElement.setAttribute('data-date', dateString);
+        
         const accommodation = calendarId === 'calendar1' ? 'alojamento1' : 'alojamento2';
         
         // Check if date is in current month
@@ -271,9 +274,12 @@ function selectDate(dateString, element) {
     const index = app.selectedDates.indexOf(dateString);
     
     if (index > -1) {
-        // Deselect date
+        // Deselect date - remover também dias intermédios
         app.selectedDates.splice(index, 1);
         element.classList.remove('selected');
+        
+        // Re-render calendar para limpar dias intermédios
+        renderCalendar(app.currentCalendar);
     } else {
         // Verificar se a nova seleção cria um período válido
         const newSelection = [...app.selectedDates, dateString].sort();
@@ -286,6 +292,11 @@ function selectDate(dateString, element) {
         // Select date
         app.selectedDates.push(dateString);
         element.classList.add('selected');
+        
+        // Se temos 2 ou mais datas, preencher os dias intermédios
+        if (app.selectedDates.length >= 2) {
+            fillIntermediateDates();
+        }
     }
     
     // Sort selected dates
@@ -327,6 +338,43 @@ function isDateRangeValid(selectedDates) {
     }
     
     return true;
+}
+
+// NOVA FUNÇÃO: Preencher dias intermédios com cor mais leve
+function fillIntermediateDates() {
+    if (app.selectedDates.length < 2) return;
+    
+    const sortedDates = [...app.selectedDates].sort();
+    const startDate = sortedDates[0];
+    const endDate = sortedDates[sortedDates.length - 1];
+    
+    console.log(`🎯 Preenchendo dias intermédios de ${startDate} até ${endDate}`);
+    
+    // Gerar todas as datas entre início e fim
+    const intermediateDates = getDatesBetween(startDate, endDate);
+    
+    // Adicionar a data final (getDatesBetween exclui o último dia)
+    intermediateDates.push(endDate);
+    
+    // Aplicar classes visuais no calendário
+    const calendarDays = document.querySelectorAll(`#${app.currentCalendar}-grid .calendar-day`);
+    
+    calendarDays.forEach(dayElement => {
+        // Recuperar a data deste elemento (guardada como data attribute)
+        const dayDate = dayElement.getAttribute('data-date');
+        
+        if (dayDate && intermediateDates.includes(dayDate)) {
+            if (app.selectedDates.includes(dayDate)) {
+                // Datas clicadas - cor forte
+                dayElement.classList.add('selected');
+                dayElement.classList.remove('intermediate');
+            } else {
+                // Datas intermédias - cor suave
+                dayElement.classList.add('intermediate');
+                dayElement.classList.remove('selected');
+            }
+        }
+    });
 }
 
 function updateSelectedDatesDisplay() {

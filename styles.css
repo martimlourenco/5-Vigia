@@ -553,6 +553,24 @@ section {
     color: white;
 }
 
+.calendar-day.intermediate {
+    background: rgba(52, 152, 219, 0.3); /* Azul claro transparente */
+    color: var(--text-dark);
+    position: relative;
+}
+
+.calendar-day.intermediate::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 2px;
+    background: var(--secondary-color);
+    border-radius: 1px;
+}
+
 .calendar-day.other-month {
     color: var(--text-light);
     opacity: 0.5;
