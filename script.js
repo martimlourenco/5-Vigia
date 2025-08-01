@@ -278,8 +278,13 @@ function selectDate(dateString, element) {
         app.selectedDates.splice(index, 1);
         element.classList.remove('selected');
         
-        // Re-render calendar para limpar dias intermédios
-        renderCalendar(app.currentCalendar);
+        // Limpar dias intermédios sem re-renderizar todo o calendário
+        clearIntermediateDates();
+        
+        // Se ainda há datas selecionadas, re-aplicar os intermédios
+        if (app.selectedDates.length >= 2) {
+            fillIntermediateDates();
+        }
     } else {
         // Verificar se a nova seleção cria um período válido
         const newSelection = [...app.selectedDates, dateString].sort();
@@ -338,6 +343,15 @@ function isDateRangeValid(selectedDates) {
     }
     
     return true;
+}
+
+// NOVA FUNÇÃO: Limpar dias intermédios sem re-renderizar calendário
+function clearIntermediateDates() {
+    const calendarDays = document.querySelectorAll(`#${app.currentCalendar}-grid .calendar-day`);
+    
+    calendarDays.forEach(dayElement => {
+        dayElement.classList.remove('intermediate');
+    });
 }
 
 // NOVA FUNÇÃO: Preencher dias intermédios com cor mais leve
