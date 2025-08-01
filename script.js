@@ -175,6 +175,10 @@ function switchCalendarTab(target) {
     app.currentCalendar = target;
     app.selectedDates = []; // Reset selected dates when switching
     updateSelectedDatesDisplay();
+    
+    // NOVO: Sincronizar galeria com calendário automaticamente
+    const galleryTarget = target === 'calendar1' ? 'gallery1' : 'gallery2';
+    syncGalleryWithCalendar(galleryTarget);
 }
 
 function renderCalendar(calendarId) {
@@ -391,14 +395,12 @@ function setupGalleries() {
     // Generate gallery images
     generateGalleryImages();
     
-    // Setup gallery tabs
-    const galleryTabs = document.querySelectorAll('.gallery-tab-btn');
-    galleryTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const target = tab.dataset.target;
-            switchGalleryTab(target);
-        });
-    });
+    // REMOVIDO: Setup gallery tabs - agora a galeria segue automaticamente o calendário
+    // A galeria será controlada pela função syncGalleryWithCalendar()
+    
+    // Inicializar galeria com o calendário ativo
+    const initialGallery = app.currentCalendar === 'calendar1' ? 'gallery1' : 'gallery2';
+    syncGalleryWithCalendar(initialGallery);
 }
 
 function generateGalleryImages() {
@@ -438,11 +440,12 @@ function createGalleryItem(src, alt, gallery, index) {
 }
 
 function switchGalleryTab(target) {
-    // Update tabs
+    // Update tabs (se existirem)
     document.querySelectorAll('.gallery-tab-btn').forEach(tab => {
         tab.classList.remove('active');
     });
-    document.querySelector(`[data-target="${target}"]`).classList.add('active');
+    const targetTab = document.querySelector(`[data-target="${target}"]`);
+    if (targetTab) targetTab.classList.add('active');
     
     // Update content
     document.querySelectorAll('.gallery-tab').forEach(content => {
@@ -451,9 +454,37 @@ function switchGalleryTab(target) {
     document.getElementById(target).classList.add('active');
 }
 
+// NOVA FUNÇÃO: Sincronizar galeria com calendário (sem tabs visíveis)
+function syncGalleryWithCalendar(galleryTarget) {
+    // Mudar galeria silenciosamente para corresponder ao calendário
+    document.querySelectorAll('.gallery-tab').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(galleryTarget).classList.add('active');
+    
+    // Atualizar indicador visual da galeria
+    const accommodationName = galleryTarget === 'gallery1' ? 'Vigia\'s Guest House' : 'Cantinho das Quintãs';
+    const indicator = document.getElementById('gallery-current-accommodation');
+    if (indicator) {
+        indicator.textContent = accommodationName;
+    }
+    
+    console.log(`🖼️ Galeria sincronizada: ${accommodationName}`);
+}
+
 function openGallery(accommodation) {
-    const galleryId = accommodation === 'alojamento1' ? 'gallery1' : 'gallery2';
-    switchGalleryTab(galleryId);
+    // NOVO: Sempre sincronizar com calendário atual
+    const currentCalendarId = app.currentCalendar;
+    const galleryId = currentCalendarId === 'calendar1' ? 'gallery1' : 'gallery2';
+    
+    // Se clicaram numa galeria diferente do calendário ativo, mudar calendário também
+    if ((accommodation === 'alojamento1' && currentCalendarId !== 'calendar1') ||
+        (accommodation === 'alojamento2' && currentCalendarId !== 'calendar2')) {
+        const targetCalendar = accommodation === 'alojamento1' ? 'calendar1' : 'calendar2';
+        switchCalendarTab(targetCalendar);
+    }
+    
+    syncGalleryWithCalendar(galleryId);
     
     // Scroll to gallery section
     document.getElementById('galeria').scrollIntoView({ 

@@ -613,8 +613,31 @@ section {
     background: var(--background-light);
 }
 
+/* Indicador da galeria sincronizada */
+.gallery-indicator {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: var(--border-radius);
+    color: white;
+}
+
+.gallery-indicator span {
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.gallery-indicator small {
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+/* Manter estilos antigos para compatibilidade (mas esconder tabs) */
 .gallery-tabs {
-    display: flex;
+    display: none; /* Ocultar tabs - agora é automático */
     justify-content: center;
     gap: 20px;
     margin-bottom: 40px;
