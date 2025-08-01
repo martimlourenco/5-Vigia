@@ -262,6 +262,11 @@ function renderCalendar(calendarId) {
         
         calendar.appendChild(dayElement);
     }
+    
+    // Aplicar dias intermédios se há 2 ou mais datas selecionadas
+    if (app.selectedDates.length >= 2) {
+        fillIntermediateDates();
+    }
 }
 
 function selectDate(dateString, element) {
