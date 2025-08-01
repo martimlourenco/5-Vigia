@@ -1,4 +1,4 @@
-# 5º Vigia - Local Accommodations
+
 <img width="570" height="218" alt="image-removebg-preview" src="https://github.com/user-attachments/assets/5e7694ef-f1b3-4778-aacc-188bb64c30c4" />
 
 A simple and responsive website for showcasing two local accommodations with photo galleries, automatic availability updates, and direct contact.
