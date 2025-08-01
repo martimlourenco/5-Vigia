@@ -341,10 +341,11 @@ function updateSelectedDatesDisplay() {
         
         contactBtn.disabled = false;
         
-        // Update contact form with selected dates
+        // Update contact form with selected dates - CORRIGIDO PARA MOSTRAR INTERVALO CORRETO
         const datesInput = document.getElementById('dates');
         if (datesInput) {
-            if (formattedDates.length === 2) {
+            if (formattedDates.length >= 2) {
+                // Mostrar sempre primeira e última data selecionada
                 datesInput.value = `${formattedDates[0]} - ${formattedDates[formattedDates.length - 1]}`;
             } else {
                 datesInput.value = formattedDates.join(', ');
