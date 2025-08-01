@@ -291,6 +291,17 @@ function selectDate(dateString, element) {
             fillIntermediateDates();
         }
     } else {
+        // NOVA LÓGICA: Limitar a máximo 2 datas (início e fim)
+        if (app.selectedDates.length >= 2) {
+            // Se já há 2 datas, limpar tudo e começar nova seleção
+            app.selectedDates = [];
+            clearIntermediateDates();
+            
+            // Remover classe 'selected' de todos os dias
+            const allDays = document.querySelectorAll(`#${app.currentCalendar}-grid .calendar-day`);
+            allDays.forEach(day => day.classList.remove('selected'));
+        }
+        
         // Verificar se a nova seleção cria um período válido
         const newSelection = [...app.selectedDates, dateString].sort();
         
@@ -303,8 +314,8 @@ function selectDate(dateString, element) {
         app.selectedDates.push(dateString);
         element.classList.add('selected');
         
-        // Se temos 2 ou mais datas, preencher os dias intermédios
-        if (app.selectedDates.length >= 2) {
+        // Se temos 2 datas, preencher os dias intermédios
+        if (app.selectedDates.length === 2) {
             fillIntermediateDates();
         }
     }
