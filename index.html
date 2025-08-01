@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5º Vigia - Alojamentos Locais de Excelência</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>5º Vigia</h2>
+            <p>A carregar experiências únicas...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="#home" style="text-decoration: none; color: inherit; cursor: pointer;">
+                    <h1>5º Vigia</h1>
+                    <span>Alojamentos Locais</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Início</a></li>
+                <li><a href="#alojamentos" class="nav-link">Alojamentos</a></li>
+                <li><a href="#calendario" class="nav-link">Disponibilidade</a></li>
+                <li><a href="#galeria" class="nav-link">Galeria</a></li>
+                <li><a href="#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">Experiências Únicas em Alojamentos Locais</h1>
+            <p class="hero-subtitle">Descubra o conforto e a autenticidade dos nossos espaços cuidadosamente selecionados</p>
+            <div class="hero-buttons">
+                <a href="#alojamentos" class="btn btn-primary">Explorar Alojamentos</a>
+                <a href="#calendario" class="btn btn-secondary">Ver Disponibilidade</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Alojamentos Section -->
+    <section id="alojamentos" class="accommodations">
+        <div class="container">
+            <div class="section-header">
+                <h2>Os Nossos Alojamentos</h2>
+                <p>Dois espaços únicos, cada um com a sua personalidade e charme especial</p>
+            </div>
+            
+            <div class="accommodations-grid">
+                <!-- Alojamento 1 -->
+                <div class="accommodation-card" data-accommodation="1">
+                    <div class="card-image">
+                        <img src="imagens/alojamento1/1.jpg" alt="Alojamento 1" onerror="this.src='imagens/exemplo.png'">
+                        <div class="card-overlay">
+                            <button class="btn-view-more" data-target="alojamento1">Ver Mais</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Casa do Vigia</h3>
+                        <p class="card-location"><i class="fas fa-map-marker-alt"></i> Centro Histórico de Viseu</p>
+                        <p class="card-description">Apartamento T1 totalmente renovado (2018) no coração de Viseu. Com 61m² e vista cidade, oferece conforto moderno a 1 minuto da Sé Catedral. Ideal para explorar o centro histórico e pontos de interesse.</p>
+                        <div class="card-features">
+                            <span><i class="fas fa-users"></i> 3 Pessoas</span>
+                            <span><i class="fas fa-bed"></i> 1 Quarto</span>
+                            <span><i class="fas fa-wifi"></i> WiFi Grátis</span>
+                            <span><i class="fas fa-snowflake"></i> Ar Condicionado</span>
+                            <span><i class="fas fa-car"></i> Estacionamento</span>
+                            <span><i class="fas fa-utensils"></i> Cozinha Equipada</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="openCalendar('alojamento1')">Ver Disponibilidade</button>
+                            <button class="btn btn-secondary" onclick="openGallery('alojamento1')">Galeria</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alojamento 2 -->
+                <div class="accommodation-card" data-accommodation="2">
+                    <div class="card-image">
+                        <img src="imagens/alojamento2/1.jpg" alt="Alojamento 2" onerror="this.src='imagens/exemplo.png'">
+                        <div class="card-overlay">
+                            <button class="btn-view-more" data-target="alojamento2">Ver Mais</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Cantinho das Quintãs</h3>
+                        <p class="card-location"><i class="fas fa-map-marker-alt"></i> Centro Histórico de Viseu</p>
+                        <p class="card-description">Apartamento T1 com espaço exterior e pontuação perfeita (10/10). A 3 minutos da Sé de Viseu e Igreja da Misericórdia, oferece conforto moderno no coração da cidade histórica.</p>
+                        <div class="card-features">
+                            <span><i class="fas fa-users"></i> 2 Pessoas</span>
+                            <span><i class="fas fa-bed"></i> 1 Quarto</span>
+                            <span><i class="fas fa-wifi"></i> WiFi Grátis</span>
+                            <span><i class="fas fa-snowflake"></i> Ar Condicionado</span>
+                            <span><i class="fas fa-tv"></i> TV Ecrã Plano</span>
+                            <span><i class="fas fa-tree"></i> Espaço Exterior</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="openCalendar('alojamento2')">Ver Disponibilidade</button>
+                            <button class="btn btn-secondary" onclick="openGallery('alojamento2')">Galeria</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section id="calendario" class="calendar-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Disponibilidade dos Alojamentos</h2>
+                <p>Consulte a disponibilidade em tempo real e escolha as suas datas ideais</p>
+            </div>
+            
+            <div class="calendar-container">
+                <div class="calendar-tabs">
+                    <button class="tab-btn active" data-target="calendar1">Casa do Vigia</button>
+                    <button class="tab-btn" data-target="calendar2">Cantinho das Quintãs</button>
+                </div>
+                
+                <div class="calendar-content">
+                    <div id="calendar1" class="calendar-tab active">
+                        <div class="calendar-header">
+                            <button class="calendar-nav prev" onclick="changeMonth(-1, 'calendar1')">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h3 id="calendar1-title">Janeiro 2025</h3>
+                            <button class="calendar-nav next" onclick="changeMonth(1, 'calendar1')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div id="calendar1-grid" class="calendar-grid"></div>
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <span class="legend-color available"></span>
+                                <span>Disponível</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color occupied"></span>
+                                <span>Ocupado</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color selected"></span>
+                                <span>Selecionado</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="calendar2" class="calendar-tab">
+                        <div class="calendar-header">
+                            <button class="calendar-nav prev" onclick="changeMonth(-1, 'calendar2')">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h3 id="calendar2-title">Janeiro 2025</h3>
+                            <button class="calendar-nav next" onclick="changeMonth(1, 'calendar2')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div id="calendar2-grid" class="calendar-grid"></div>
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <span class="legend-color available"></span>
+                                <span>Disponível</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color occupied"></span>
+                                <span>Ocupado</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color selected"></span>
+                                <span>Selecionado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="booking-panel">
+                    <div class="selected-dates">
+                        <h4>Datas Selecionadas</h4>
+                        <div id="selected-dates-display">Seleccione as datas desejadas no calendário</div>
+                    </div>
+                    <button id="contact-booking" class="btn btn-primary" disabled onclick="openContactForm()">
+                        Contactar para Reserva
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="galeria" class="gallery-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Galeria de Fotos</h2>
+                <p>Explore cada detalhe dos nossos alojamentos através das nossas fotografias</p>
+            </div>
+            
+            <div class="gallery-tabs">
+                <button class="gallery-tab-btn active" data-target="gallery1">Casa do Vigia</button>
+                <button class="gallery-tab-btn" data-target="gallery2">Cantinho das Quintãs</button>
+            </div>
+            
+            <div class="gallery-content">
+                <div id="gallery1" class="gallery-tab active">
+                    <div class="gallery-grid" id="gallery1-grid">
+                        <!-- Fotos serão geradas dinamicamente -->
+                    </div>
+                </div>
+                
+                <div id="gallery2" class="gallery-tab">
+                    <div class="gallery-grid" id="gallery2-grid">
+                        <!-- Fotos serão geradas dinamicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Entre em Contacto</h2>
+                <p>Estamos aqui para tornar a sua estadia numa experiência inesquecível</p>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>E-mail</h4>
+                            <p>antoniojclourenco@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Telefone</h4>
+                            <p>+351 962 696 564</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Horário de Atendimento</h4>
+                            <p>9h00 - 20h00 (Todos os dias)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Nome Completo" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="E-mail" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" name="phone" placeholder="Telefone">
+                        </div>
+                        <div class="form-group">
+                            <select id="accommodation" name="accommodation" required>
+                                <option value="">Seleccionar Alojamento</option>
+                                <option value="alojamento1">Casa do Vigia</option>
+                                <option value="alojamento2">Cantinho das Quintãs</option>
+                                <option value="ambos">Ambos os Alojamentos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="dates" name="dates" placeholder="Datas Pretendidas (dd/mm/aaaa - dd/mm/aaaa)" readonly>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Mensagem adicional..." rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar Pedido</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>5º Vigia</h3>
+                    <p>Alojamentos locais de excelência para experiências únicas e memoráveis.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#alojamentos">Alojamentos</a></li>
+                        <li><a href="#calendario">Disponibilidade</a></li>
+                        <li><a href="#galeria">Galeria</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Informações</h4>
+                    <ul>
+                        <li>Política de Privacidade</li>
+                        <li>Termos e Condições</li>
+                        <li>Política de Cancelamento</li>
+                        <li>FAQ</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> antoniojclourenco@gmail.com</p>
+                    <p><i class="fas fa-phone"></i> +351 962 696 564</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 5º Vigia. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal para galeria -->
+    <div id="gallery-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-controls">
+                <button id="zoom-out" class="zoom-btn" title="Diminuir zoom">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <button id="zoom-reset" class="zoom-btn" title="Zoom original">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button id="zoom-in" class="zoom-btn" title="Aumentar zoom">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+            </div>
+            <div class="modal-image-container">
+                <img id="modal-image" src="" alt="">
+            </div>
+            <div class="modal-nav">
+                <button id="modal-prev"><i class="fas fa-chevron-left"></i></button>
+                <button id="modal-next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="modal-info">
+                <span id="modal-counter">1 / 30</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

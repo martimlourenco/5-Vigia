@@ -1,0 +1,25 @@
+# Ficheiros temporários e de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Ficheiros de configuração local
+.env
+.env.local
+
+# Ficheiros de backup
+*.bak
+*.backup
+
+# Ficheiros do VS Code (opcional)
+.vscode/
+
+# Ficheiros do Windows
+desktop.ini
+
+# Ficheiros iCal com dados reais de reservas
+*.ics
+export.ics
+exportcq.ics
