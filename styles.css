@@ -554,7 +554,7 @@ section {
 }
 
 .calendar-day.intermediate {
-    background: rgba(52, 152, 219, 0.3); /* Azul claro transparente */
+    background: rgba(255, 140, 0, 0.3); /* Laranja claro transparente */
     color: var(--text-dark);
     position: relative;
 }
@@ -567,7 +567,7 @@ section {
     transform: translateX(-50%);
     width: 6px;
     height: 2px;
-    background: var(--secondary-color);
+    background: #FF8C00; /* Laranja escuro para o indicador */
     border-radius: 1px;
 }
 
