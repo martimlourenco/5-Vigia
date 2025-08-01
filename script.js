@@ -14,6 +14,7 @@ const app = {
     isDragging: false,
     dragStart: { x: 0, y: 0 },
     imagePosition: { x: 0, y: 0 },
+
     // Configuração do EmailJS - CONFIGURADO E PRONTO!
     emailjs: {
         serviceId: 'service_e1cp3rh',
@@ -32,7 +33,7 @@ const app = {
             occupiedDates: []
         },
         alojamento2: {
-            // Iniciar VAZIO - será preenchido pelos dados reais do Booking.com  
+            // Iniciar VAZIO - será preenchido pelos dados reais do Booking.com
             occupiedDates: []
         }
     }
@@ -54,12 +55,10 @@ async function initializeApp() {
     setupScrollEffects();
     setupViewMoreButtons();
     
-    // REACTIVAR: Carregar dados reais do Booking.com
-    console.log('🚀 A carregar dados reais do iCal do Booking.com...');
+    // Carregar dados reais do Booking.com
     await updateBookingData();
     
-    // DEPOIS: Inicializar calendários com dados reais
-    console.log('📅 A renderizar calendários com dados reais...');
+    // Renderizar calendários com dados reais
     renderCalendar('calendar1');
     renderCalendar('calendar2');
 }
@@ -1084,9 +1083,15 @@ function parseICalEvents(icalText) {
             eventCount++;
         } else if (line === 'END:VEVENT') {
             if (currentEvent.dtstart && currentEvent.dtend) {
-                const dates = getDatesBetween(currentEvent.dtstart, currentEvent.dtend);
-                occupiedDates.push(...dates);
-                console.log(`📋 Evento ${eventCount}: ${currentEvent.dtstart} até ${currentEvent.dtend} (${dates.length} dias) - ${currentEvent.summary || 'Sem título'}`);
+                // Datas da reserva (do check-in até checkout, excluindo checkout)
+                const reservationDates = getDatesBetween(currentEvent.dtstart, currentEvent.dtend);
+                
+                occupiedDates.push(...reservationDates);
+                
+                console.log(`📋 Evento ${eventCount}: CHECK-IN ${currentEvent.dtstart} até CHECKOUT ${currentEvent.dtend}`);
+                console.log(`🏠 Dias ocupados desta reserva: ${reservationDates.join(', ')} (${reservationDates.length} dias)`);
+                console.log(`ℹ️  Resumo: ${currentEvent.summary || 'Sem título'}`);
+                console.log('---');
             } else {
                 console.warn(`⚠️ Evento ${eventCount} incompleto:`, currentEvent);
             }
@@ -1096,7 +1101,6 @@ function parseICalEvents(icalText) {
             if (dateMatch) {
                 const dateStr = dateMatch[1];
                 currentEvent.dtstart = `${dateStr.substr(0,4)}-${dateStr.substr(4,2)}-${dateStr.substr(6,2)}`;
-                console.log(`📅 Data início: ${currentEvent.dtstart}`);
             } else {
                 console.warn(`⚠️ Formato DTSTART não reconhecido: ${line}`);
             }
@@ -1105,7 +1109,6 @@ function parseICalEvents(icalText) {
             if (dateMatch) {
                 const dateStr = dateMatch[1];
                 currentEvent.dtend = `${dateStr.substr(0,4)}-${dateStr.substr(4,2)}-${dateStr.substr(6,2)}`;
-                console.log(`📅 Data fim: ${currentEvent.dtend}`);
             } else {
                 console.warn(`⚠️ Formato DTEND não reconhecido: ${line}`);
             }
@@ -1119,11 +1122,9 @@ function parseICalEvents(icalText) {
     const uniqueDates = [...new Set(occupiedDates)].sort();
     console.log(`✅ Total de eventos processados: ${eventCount}`);
     console.log(`📅 Total de dias ocupados: ${uniqueDates.length}`);
-    console.log('📊 Datas ocupadas (amostra):', uniqueDates.slice(0, 10));
     
     if (uniqueDates.length === 0) {
         console.warn('⚠️ NENHUMA DATA OCUPADA ENCONTRADA!');
-        console.log('🔍 Primeira parte do iCal:', icalText.substring(0, 500));
     }
     
     return uniqueDates;
@@ -1143,6 +1144,7 @@ function getDatesBetween(startDate, endDate) {
     const currentDate = new Date(startDate);
     const end = new Date(endDate);
     
+    // Incluir o dia de início (check-in) e excluir o dia de fim (checkout)
     while (currentDate < end) {
         dates.push(currentDate.toISOString().split('T')[0]);
         currentDate.setDate(currentDate.getDate() + 1);
