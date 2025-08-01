@@ -18,8 +18,3 @@ Thumbs.db
 
 # Ficheiros do Windows
 desktop.ini
-
-# Ficheiros iCal com dados reais de reservas
-*.ics
-export.ics
-exportcq.ics
