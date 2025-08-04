@@ -825,7 +825,7 @@ async function handleContactSubmission() {
         // Fallback para sistema mailto
         console.log('📧 Usando fallback mailto...');
         
-        const emailBody = `Pedido de Reserva - 5º Vigia
+        const emailBody = `Pedido de Reserva - V&Q Alojamentos Locais
 
 DADOS DO CLIENTE:
 Nome: ${data.name}
@@ -840,7 +840,7 @@ MENSAGEM:
 ${data.message || 'Sem mensagem adicional'}
 
 ---
-Este pedido foi enviado através do website 5º Vigia.
+Este pedido foi enviado através do website V&Q Alojamentos Locais.
 `;
         
         try {

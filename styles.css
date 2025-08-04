@@ -96,6 +96,7 @@ body {
     font-size: 1.8rem;
     color: var(--primary-color);
     margin-bottom: -5px;
+    line-height: 1.2;
 }
 
 .nav-logo span {
